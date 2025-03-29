@@ -1,6 +1,6 @@
 {
-    "name": "LeetCode Playground",
-    "description": "Test your code snippets inline on LeetCode",
+    "name": "Ai console error fix",
+    "description": "Reads your console and suggests solution, provides solution to stackoverflow",
     "version": "1.0",
     "manifest_version": 3,
     "action": {
