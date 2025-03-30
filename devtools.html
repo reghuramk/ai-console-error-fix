@@ -1,0 +1,34 @@
+chrome.devtools.panels.create(
+  "AI Debugger",
+  "icons/icon-48.png",
+  "devtools.html",
+  function (panel) {
+    console.log("AI Debugger panel created.");
+  }
+);
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "console_error") {
+    const errorContainer = document.getElementById("errors");
+    const errorItem = document.createElement("div");
+    
+    errorItem.className = "error-item";
+    errorItem.innerHTML = `
+      <p><strong>Error:</strong> ${message.error}</p>
+      <p><strong>File:</strong> ${message.file}</p>
+      <p><strong>Line:</strong> ${message.line}</p>
+      <p><strong>AI Fix:</strong> Loading...</p>
+    `;
+    errorContainer.appendChild(errorItem);
+
+    // Fetch AI fix
+    fetch(`http://localhost:3000/ai-fix?error=${encodeURIComponent(message.error)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        errorItem.querySelector("p:nth-child(4)").innerText = `AI Fix: ${data.fix}`;
+      })
+      .catch(() => {
+        errorItem.querySelector("p:nth-child(4)").innerText = "AI Fix: Error fetching solution.";
+      });
+  }
+});
